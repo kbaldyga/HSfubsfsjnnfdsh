@@ -15,11 +15,17 @@ class Contractor @Inject()(contractorsDao: ContractorsDao) extends Controller {
     }
   }
 
-  // TODO: make async
-  def get(id: Long) = Action {
-    contractorsDao.get(id) match {
+  def get(id: Long) = Action.async {
+    contractorsDao.get(id) map {
       case None => NotFound
       case c => Ok(toJson(c))
+    }
+  }
+
+  def trades(id: Long) = Action.async {
+    contractorsDao.tradesByContractor(id) map {
+      case Seq() => NotFound
+      case t => Ok(toJson(t))
     }
   }
 }

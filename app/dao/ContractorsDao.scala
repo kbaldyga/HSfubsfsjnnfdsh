@@ -24,22 +24,34 @@ class ContractorsDao @Inject()(protected val dbConfigProvider: DatabaseConfigPro
     trade <- contractor.trades
   } yield(contractor, trade)
 
-  // damn, terrible join...
-  def all():Future[Seq[models.Contractor]] = db.run(contractorTradesQuery
-    .result
-    .map {
-      _.groupBy(_._1)
-    .map {
-        case (k, v) => {
-          k.Trades = v.map(_._2)
-          k
-        }
-      }.toSeq
-  })
+//  def all():Future[Seq[models.Contractor]] = db.run(contractorTradesQuery
+//    .result
+//    .map {
+//      _.groupBy(_._1)
+//    .map {
+//        case (k, v) => {
+//          k.Trades = v.map(_._2)
+//          k
+//        }
+//      }.toSeq
+//  })
 
-  // TODO: don't fetch everything!!!
-  def get(id:Long):Option[Contractor] =
-    Await.result(all(), Duration.Inf).filter(_.id == id).headOption
+  def all():Future[Seq[Contractor]] = db.run(contractors.result)
+
+  def tradesByContractor(id:Long):Future[Seq[Trade]] = {
+    val tradesQuery = for {
+      contractor <- contractors if contractor.id === id
+      trade <- contractor.trades
+    } yield (trade)
+
+    db.run(tradesQuery.result)
+  }
+
+  def get(id:Long):Future[Option[Contractor]] =
+    db.run(contractors.filter(_.id === id).result.headOption)
+
+//  def getEverything(id:Long):Option[Contractor] =
+//    Await.result(all(), Duration.Inf).filter(_.id == id).headOption
 
   case class ContractorTrade(contractorId:Long, tradeId:Long)
 

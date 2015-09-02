@@ -15,21 +15,22 @@ case class Contractor(id: Long,
                       postcode: String,
                       description: String
                       ) {
-  var Trades:Seq[Trade] = Seq(Trade(10, "test"))
+  //var Trades:Seq[Trade] = Seq(Trade(10, "test"))
 }
 
 
 object Contractor {
-  implicit val contractorWrites = new Writes[Contractor] {
-    override def writes(o: Contractor): JsValue = Json.obj(
-      "id" -> o.id,
-      "name" -> o.name,
-      "trades" -> Json.toJson(o.Trades),
-      "email" -> o.email,
-      "phone" -> o.phone,
-      "website" -> o.website,
-      "postcode" -> o.postcode,
-      "description" -> o.description
-    )
-  }
+  implicit val contractorForm = Json.format[Contractor]
+//  implicit val contractorWrites = new Writes[Contractor] {
+//    override def writes(o: Contractor): JsValue = Json.obj(
+//      "id" -> o.id,
+//      "name" -> o.name,
+//      "trades" -> Json.toJson(o.Trades),
+//      "email" -> o.email,
+//      "phone" -> o.phone,
+//      "website" -> o.website,
+//      "postcode" -> o.postcode,
+//      "description" -> o.description
+//    )
+//  }
 }
