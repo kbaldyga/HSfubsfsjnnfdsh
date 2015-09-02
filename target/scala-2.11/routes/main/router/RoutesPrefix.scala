@@ -1,7 +1,7 @@
 
 // @GENERATOR:play-routes-compiler
 // @SOURCE:/Users/kamil/github/hireable/conf/routes
-// @DATE:Wed Sep 02 11:13:24 CEST 2015
+// @DATE:Wed Sep 02 16:03:46 CEST 2015
 
 
 package router {

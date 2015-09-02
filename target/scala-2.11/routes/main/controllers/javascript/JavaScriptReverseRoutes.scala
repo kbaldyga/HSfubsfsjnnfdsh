@@ -1,7 +1,7 @@
 
 // @GENERATOR:play-routes-compiler
 // @SOURCE:/Users/kamil/github/hireable/conf/routes
-// @DATE:Wed Sep 02 11:13:24 CEST 2015
+// @DATE:Wed Sep 02 16:03:46 CEST 2015
 
 import play.api.routing.JavaScriptReverseRoute
 import play.api.mvc.{ QueryStringBindable, PathBindable, Call, JavascriptLiteral }
@@ -14,8 +14,8 @@ import _root_.controllers.Assets.Asset
 package controllers.javascript {
   import ReverseRouteContext.empty
 
-  // @LINE:11
-  class ReverseAssets(_prefix: => String) {
+  // @LINE:10
+  class ReverseContractor(_prefix: => String) {
 
     def _defaultPrefix: String = {
       if (_prefix.endsWith("/")) "" else "/"
@@ -23,6 +23,36 @@ package controllers.javascript {
 
   
     // @LINE:11
+    def get: JavaScriptReverseRoute = JavaScriptReverseRoute(
+      "controllers.Contractor.get",
+      """
+        function(id) {
+          return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "contractor/" + (""" + implicitly[PathBindable[Long]].javascriptUnbind + """)("id", id)})
+        }
+      """
+    )
+  
+    // @LINE:10
+    def index: JavaScriptReverseRoute = JavaScriptReverseRoute(
+      "controllers.Contractor.index",
+      """
+        function() {
+          return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "contractor"})
+        }
+      """
+    )
+  
+  }
+
+  // @LINE:14
+  class ReverseAssets(_prefix: => String) {
+
+    def _defaultPrefix: String = {
+      if (_prefix.endsWith("/")) "" else "/"
+    }
+
+  
+    // @LINE:14
     def versioned: JavaScriptReverseRoute = JavaScriptReverseRoute(
       "controllers.Assets.versioned",
       """
