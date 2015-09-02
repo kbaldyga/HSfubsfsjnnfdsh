@@ -7,6 +7,8 @@ import play.api.mvc.Controller
 import play.api.libs.json.Json.toJson
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
+import scala.concurrent.Future
+
 class Contractor @Inject()(contractorsDao: ContractorsDao) extends Controller {
   def index = Action.async {
     contractorsDao.all().map {
@@ -26,6 +28,21 @@ class Contractor @Inject()(contractorsDao: ContractorsDao) extends Controller {
     contractorsDao.tradesByContractor(id) map {
       case Seq() => NotFound
       case t => Ok(toJson(t))
+    }
+  }
+
+  def post = Action.async(parse.json) { request =>
+    request.body.validate[models.Contractor].map { contractor =>
+      contractorsDao.insert(contractor).map(newContractor => Ok(toJson(newContractor)))
+    }.getOrElse(Future.successful(BadRequest("invalid json")))
+  }
+
+  def postTrade(id:Long, tradeId:Long) = Action.async {
+    contractorsDao.get(id) map {
+      case None => NotFound
+      case c =>
+          contractorsDao.insertTrade(id, tradeId)
+          Ok(toJson(c))
     }
   }
 }

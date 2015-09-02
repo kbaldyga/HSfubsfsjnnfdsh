@@ -50,6 +50,19 @@ class ContractorsDao @Inject()(protected val dbConfigProvider: DatabaseConfigPro
   def get(id:Long):Future[Option[Contractor]] =
     db.run(contractors.filter(_.id === id).result.headOption)
 
+
+  def insert(contractor:Contractor) = {
+    val insertion = (contractors returning contractors.map(_.id)) += contractor
+    val inserted = db.run(insertion)
+    inserted.map { resultId =>
+      contractor.copy(id = Some(resultId))
+    }
+  }
+
+  def insertTrade(contractorId:Long, tradeId:Long) = {
+    db.run(contractorTrades += (ContractorTrade(contractorId, tradeId)))
+  }
+
 //  def getEverything(id:Long):Option[Contractor] =
 //    Await.result(all(), Duration.Inf).filter(_.id == id).headOption
 
@@ -76,6 +89,6 @@ class ContractorsDao @Inject()(protected val dbConfigProvider: DatabaseConfigPro
 
     def trades = contractorTrades.filter(_.contractorId === id).flatMap(_.tradeFk)
 
-    override def * = (id, name, email, phone, website, postcode, description) <> ((Contractor.apply _).tupled, Contractor.unapply)
+    override def * = (id.?, name, email, phone, website, postcode, description) <> ((Contractor.apply _).tupled, Contractor.unapply)
   }
 }

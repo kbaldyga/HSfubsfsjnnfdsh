@@ -7,7 +7,7 @@ object Trade {
   implicit val tradeFormat = Json.format[Trade]
 }
 
-case class Contractor(id: Long,
+case class Contractor(id: Option[Long],
                       name: String,
                       email: String,
                       phone: String,
