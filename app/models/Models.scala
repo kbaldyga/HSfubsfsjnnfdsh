@@ -18,6 +18,10 @@ case class Contractor(id: Option[Long],
   //var Trades:Seq[Trade] = Seq(Trade(10, "test"))
 }
 
+case class Postcode(Id: Int, Postcode: Int, City: String, Latitude: Double, Longitude: Double)
+object Postcode {
+  implicit val postcodeFormat = Json.format[Postcode]
+}
 
 object Contractor {
   implicit val contractorForm = Json.format[Contractor]
