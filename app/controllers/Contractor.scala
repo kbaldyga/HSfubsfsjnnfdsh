@@ -2,7 +2,7 @@ package controllers
 
 import javax.inject.Inject
 import dao.ContractorsDao
-import play.api.libs.json.{Json, JsError}
+import play.api.libs.json._
 import play.api.mvc.Action
 import play.api.mvc.Controller
 import play.api.libs.json.Json.toJson
@@ -44,12 +44,29 @@ class Contractor @Inject()(contractorsDao: ContractorsDao) extends Controller {
     )
   }
 
-  def postTrade(id:Long, tradeId:Long) = Action.async {
-    contractorsDao.get(id) map {
-      case None => NotFound
-      case c =>
-          contractorsDao.insertTrade(id, tradeId)
-          Ok(toJson(c))
+  def details(id:Long) = Action.async(parse.json) { request =>
+    request.body match {
+      case JsObject(fields) =>
+          fields.getOrElse("description", None) match {
+            case None => { }
+            case JsString(s) =>
+              contractorsDao.updateDescription(id, s.toString)
+          }
+        Future.successful(Ok(toJson("Ok")))
+      case _ => Future.successful(BadRequest(toJson("bad request")))
     }
+  }
+
+  def putTrades(id:Long) = Action.async(parse.json) { request =>
+    request.body match {
+      case JsArray(a) =>
+        val newTrades = a.map(_ match {
+          case JsString(x) => x.toInt
+          case _ => 0
+        }).filter(_ > 0)
+        contractorsDao.updateTrades(id, newTrades)
+      case _ => { }
+    }
+    Future.successful(Ok(toJson("Ok")))
   }
 }

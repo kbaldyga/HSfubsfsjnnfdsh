@@ -1,37 +1,74 @@
 @(message: String)
 
 @main("Welcome to Hireable") {
-
-<div class="container-fluid">
-    <div class="row centered500">
-        <form id="step1form">
-            <div class="form-group">
-                HERE LIVES BREADCRUMBS
-            </div>
-            <h1>Contractor application form</h1>
-            <div class="form-group">
-                <label for="name">Trading name</label>
-                <input type="text" id="name" name="name" class="form-control" >
-            </div>
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="text" id="email" name="email" class="form-control" >
-            </div>
-            <div class="form-group">
-                <label for="phone">Phone number</label>
-                <input type="text" id="phone" name="phone" class="form-control" >
-            </div>
-            <div class="form-group">
-                <label for="website">Website</label>
-                <input type="text" id="website" name="website" class="form-control" >
-            </div>
-            <div class="form-group">
-                <label for="postcode">Postcode</label>
-                <input type="text" id="postcode" name="postcode" class="form-control" >
-            </div>
-            <button type="submit" class="btn btn-default" id="step1Next">Next -></button>
-        </form>
+<div id="step1">
+    <div class="container-fluid">
+        <div class="row centered500">
+            <form id="step1form">
+                <div class="form-group">
+                    HERE LIVES BREADCRUMBS
+                </div>
+                <h1>Contractor application form</h1>
+                <div class="form-group">
+                    <label for="name">Trading name</label>
+                    <input type="text" id="name" name="name" class="form-control" >
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="text" id="email" name="email" class="form-control" >
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone number</label>
+                    <input type="text" id="phone" name="phone" class="form-control" >
+                </div>
+                <div class="form-group">
+                    <label for="website">Website</label>
+                    <input type="text" id="website" name="website" class="form-control" >
+                </div>
+                <div class="form-group">
+                    <label for="postcode">Postcode</label>
+                    <input type="text" id="postcode" name="postcode" class="form-control" >
+                </div>
+                <button type="submit" class="btn btn-default" id="step1Next">Next -></button>
+            </form>
+        </div>
     </div>
 </div>
-
+<div id="step2" style="display: none;">
+    <div class="container-fluid">
+        <div class="row centered500">
+            <form id="step2form">
+                <div class="form-group">
+                    HERE LIVES BREADCRUMBS STEP 2
+                </div>
+                <h1>Contractor application form step 2</h1>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea class="form-control" rows="10" id="description" name="description" class="form-control" ></textarea>
+                </div>
+                <button type="submit" class="btn btn-default" id="step2Next">Next -></button>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="step3" style="display: none;">
+    <div class="container-fluid">
+        <div class="row centered500">
+            <form id="step3form">
+                <div class="form-group">
+                    HERE LIVES BREADCRUMBS STEP 3
+                </div>
+                <h1>Contractor application form step 3</h1>
+                <div id="trades-container">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" id="checkboxSuccess" value="option1"> Checkbox with success
+                        </label>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-default" id="step3Next">Next -></button>
+            </form>
+        </div>
+    </div>
+</div>
 }

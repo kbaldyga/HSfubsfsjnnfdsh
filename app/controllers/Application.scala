@@ -15,5 +15,4 @@ class Application extends Controller {
   def contractorForm1 = Action {
     Ok(views.html.contractor1("Welcome to hireable"))
   }
-
 }

@@ -16,7 +16,8 @@ GET     /api/contractors                    controllers.Contractor.index
 GET     /api/contractors/:id                controllers.Contractor.get(id:Long)
 GET     /api/contractors/:id/trades         controllers.Contractor.trades(id:Long)
 POST    /api/contractors                    controllers.Contractor.post
-POST    /api/contractors/:id/trades/:tradeId controllers.Contractor.postTrade(id:Long, tradeId:Long)
+PUT     /api/contractors/:id/trades         controllers.Contractor.putTrades(id:Long)
+PUT     /api/contractors/:id                controllers.Contractor.details(id:Long)
 
 GET     /api/postcodes                      controllers.Postcode.index(prefix: Option[String])
 GET     /api/postcodes/:id                  controllers.Postcode.get(id:Int)

@@ -63,6 +63,20 @@ class ContractorsDao @Inject()(protected val dbConfigProvider: DatabaseConfigPro
     db.run(contractorTrades += (ContractorTrade(contractorId, tradeId)))
   }
 
+  def updateTrades(contractorId:Long, newTrades:Seq[Int]) = {
+    val oldTrades = for {
+      t <- contractorTrades if t.contractorId === contractorId
+    } yield(t)
+
+    db.run(oldTrades.delete)
+    db.run(contractorTrades ++= (newTrades.map(ContractorTrade(contractorId, _))))
+  }
+
+  def updateDescription(id:Long, description:String): Future[Int] = {
+    val contractor = for {c <- contractors if c.id === id} yield c.description
+    db.run(contractor.update(description))
+  }
+
 //  def getEverything(id:Long):Option[Contractor] =
 //    Await.result(all(), Duration.Inf).filter(_.id == id).headOption
 
