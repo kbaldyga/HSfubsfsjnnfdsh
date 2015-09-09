@@ -98,11 +98,12 @@ class ContractorsDao @Inject()(protected val dbConfigProvider: DatabaseConfigPro
     def email = column[String]("Email")
     def phone = column[String]("Phone")
     def website = column[String]("Website")
-    def postcode = column[String]("Postcode")
+    def postcode = column[Int]("Postcode")
+    def postcodeSuffix = column[String]("PostcodeSuffix")
     def description = column[String]("Description")
 
     def trades = contractorTrades.filter(_.contractorId === id).flatMap(_.tradeFk)
 
-    override def * = (id.?, name, email, phone, website, postcode, description.?) <> ((Contractor.apply _).tupled, Contractor.unapply)
+    override def * = (id.?, name, email, phone, website, postcode, postcodeSuffix, description.?) <> ((Contractor.apply _).tupled, Contractor.unapply)
   }
 }

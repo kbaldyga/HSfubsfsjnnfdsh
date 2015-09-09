@@ -6,7 +6,11 @@ var loadStep1 = function () {
             formLen = formArray.length
             formObj = { };
         for(i=0;i<formLen;i++) {
-            formObj[formArray[i].name]=formArray[i].value
+            if(formArray[i].name == "postcode") {
+                formObj[formArray[i].name]=parseInt(formArray[i].value)
+            } else {
+                formObj[formArray[i].name]=formArray[i].value
+            }
         }
 
         $.ajax({

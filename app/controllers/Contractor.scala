@@ -40,11 +40,10 @@ class Contractor @Inject()(contractorsDao: ContractorsDao, postcodesDao: Postcod
         Future.successful(BadRequest(Json.obj("status" ->"KO", "message" -> JsError.toJson(errors))))
       },
       contractor => {
-        val postcodePrefix = (if (contractor.postcode.length() > 4) contractor.postcode.substring(0, 4) else contractor.postcode).toInt
-        val postCode = Await.result(postcodesDao.find(postcodePrefix), Duration.Inf).headOption
+        val postCode = Await.result(postcodesDao.find(contractor.postcode), Duration.Inf).headOption
         postCode match {
           case None => Future.successful(BadRequest(toJson("invalid postcode")))
-          case Some(s) => contractorsDao.insert(contractor.copy(postcode = postCode.get.Postcode.toString))
+          case Some(s) => contractorsDao.insert(contractor.copy(postcode = postCode.get.Postcode))
             .map(newContractor => Ok(toJson(newContractor)))
         }
       }

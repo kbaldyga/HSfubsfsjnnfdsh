@@ -108,3 +108,11 @@ div.centered500 {
   max-width: 500px;
   margin: auto;
 }
+input#postcodeSuffix {
+  max-width: 48px;
+  display: inline;
+}
+input#postcode {
+  max-width: 60px;
+  display: inline;
+}
