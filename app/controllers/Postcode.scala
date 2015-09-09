@@ -23,11 +23,16 @@ class Postcode @Inject()(postcodesDao:PostcodesDao) extends Controller {
     }
   }
 
-  def get(id: Integer) = Action.async {
+  def get(id: Int) = Action.async {
     postcodesDao.get(id).map {
       case None => NotFound
       case c => Ok(toJson(c))
     }
   }
 
+  def nearest(id: Int, maxDistance:Int) = Action.async {
+    postcodesDao.findNearest(id, maxDistance) map {
+      case res => Ok(toJson(res))
+    }
+  }
 }

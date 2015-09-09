@@ -6,6 +6,7 @@ import models.Postcode
 import play.api.db.slick.{HasDatabaseConfigProvider, DatabaseConfigProvider}
 import slick.driver.JdbcProfile
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 @Singleton()
 class PostcodesDao @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) extends PostcodesComponent
@@ -30,6 +31,28 @@ with HasDatabaseConfigProvider[JdbcProfile] {
 
   def find(prefix:Int):Future[Seq[Postcode]] =
     db.run(prefixQuery(prefix).result)
+
+  private def toRadian(value:Double) = (Math.PI / 180.0) * value
+  private def distance(pos1Lat:Double, pos1Lon:Double, pos2Lat:Double, pos2Lon:Double):Double = {
+    val earthRadius = 6371
+    val dLat = toRadian(pos2Lat - pos1Lat)
+    val dLon = toRadian(pos2Lon - pos1Lon)
+    val a = Math.sin(dLat / 2.0) * Math.sin(dLat / 2.0) +
+      Math.cos(toRadian(pos1Lat)) * Math.cos(toRadian(pos2Lat)) *
+      Math.sin(dLon / 2.0) * Math.sin(dLon / 2.0)
+    val c = 2.0 * Math.asin(Math.min(1, Math.sqrt(a)))
+    val result = earthRadius * c
+    result
+  }
+
+  def findNearest(initialId:Int, maxDistance:Int):Future[Seq[Postcode]] = {
+    for {
+      initial <- get(initialId)
+      a <- all()
+      within: Seq[Postcode] = a.filter(p =>
+        (distance(initial.get.Latitude, initial.get.Longitude, p.Latitude, p.Longitude) < maxDistance))
+    } yield(within)
+  }
 }
 
 trait PostcodesComponent { self: HasDatabaseConfigProvider[JdbcProfile] =>

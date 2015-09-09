@@ -19,6 +19,7 @@ POST    /api/contractors/:id/trades/:tradeId controllers.Contractor.postTrade(id
 
 GET     /api/postcodes                      controllers.Postcode.index(prefix: Option[String])
 GET     /api/postcodes/:id                  controllers.Postcode.get(id:Int)
+GET     /api/postcodes/:id/nearest/:dis     controllers.Postcode.nearest(id:Int, dis:Int)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
