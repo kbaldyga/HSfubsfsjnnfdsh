@@ -1,16 +1,17 @@
 package controllers
 
 import javax.inject.Inject
-import dao.ContractorsDao
+import dao.{PostcodesDao, ContractorsDao}
 import play.api.libs.json._
 import play.api.mvc.Action
 import play.api.mvc.Controller
 import play.api.libs.json.Json.toJson
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
-import scala.concurrent.Future
+import scala.concurrent.{Await, Future}
+import scala.concurrent.duration.Duration
 
-class Contractor @Inject()(contractorsDao: ContractorsDao) extends Controller {
+class Contractor @Inject()(contractorsDao: ContractorsDao, postcodesDao: PostcodesDao) extends Controller {
   def index = Action.async {
     contractorsDao.all().map {
       case Seq() => NotFound
@@ -39,7 +40,13 @@ class Contractor @Inject()(contractorsDao: ContractorsDao) extends Controller {
         Future.successful(BadRequest(Json.obj("status" ->"KO", "message" -> JsError.toJson(errors))))
       },
       contractor => {
-        contractorsDao.insert(contractor).map(newContractor => Ok(toJson(newContractor)))
+        val postcodePrefix = (if (contractor.postcode.length() > 4) contractor.postcode.substring(0, 4) else contractor.postcode).toInt
+        val postCode = Await.result(postcodesDao.find(postcodePrefix), Duration.Inf).headOption
+        postCode match {
+          case None => Future.successful(BadRequest(toJson("invalid postcode")))
+          case Some(s) => contractorsDao.insert(contractor.copy(postcode = postCode.get.Postcode.toString))
+            .map(newContractor => Ok(toJson(newContractor)))
+        }
       }
     )
   }
