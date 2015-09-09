@@ -23,6 +23,6 @@ resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 routesGenerator := InjectedRoutesGenerator
 
 
-fork in run := true
+//fork in run := true
 // set to false to debug!
-//fork in run := false
+fork in run := false

@@ -1,6 +1,5 @@
 package controllers
 
-import play.api._
 import play.api.mvc._
 
 class Application extends Controller {
@@ -11,6 +10,10 @@ class Application extends Controller {
 
   def playIndex = Action {
     Ok(views.html.playIndex("Your new application is ready."))
+  }
+
+  def contractorForm1 = Action {
+    Ok(views.html.contractor1("Welcome to hireable"))
   }
 
 }

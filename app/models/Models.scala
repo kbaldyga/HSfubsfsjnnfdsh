@@ -13,7 +13,7 @@ case class Contractor(id: Option[Long],
                       phone: String,
                       website: String,
                       postcode: String,
-                      description: String
+                      description: Option[String]
                       ) {
   //var Trades:Seq[Trade] = Seq(Trade(10, "test"))
 }

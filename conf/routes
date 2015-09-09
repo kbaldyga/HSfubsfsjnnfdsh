@@ -6,6 +6,7 @@
 
 GET     /                                   controllers.Application.index
 GET     /playIndex                          controllers.Application.playIndex
+GET     /application/step1                  controllers.Application.contractorForm1
 
 #API
 GET     /api/trades                         controllers.Trade.index

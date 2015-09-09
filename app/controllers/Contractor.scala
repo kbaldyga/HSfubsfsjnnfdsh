@@ -2,6 +2,7 @@ package controllers
 
 import javax.inject.Inject
 import dao.ContractorsDao
+import play.api.libs.json.{Json, JsError}
 import play.api.mvc.Action
 import play.api.mvc.Controller
 import play.api.libs.json.Json.toJson
@@ -32,9 +33,15 @@ class Contractor @Inject()(contractorsDao: ContractorsDao) extends Controller {
   }
 
   def post = Action.async(parse.json) { request =>
-    request.body.validate[models.Contractor].map { contractor =>
-      contractorsDao.insert(contractor).map(newContractor => Ok(toJson(newContractor)))
-    }.getOrElse(Future.successful(BadRequest("invalid json")))
+    val contractorResult = request.body.validate[models.Contractor]
+    contractorResult.fold(
+      errors => {
+        Future.successful(BadRequest(Json.obj("status" ->"KO", "message" -> JsError.toJson(errors))))
+      },
+      contractor => {
+        contractorsDao.insert(contractor).map(newContractor => Ok(toJson(newContractor)))
+      }
+    )
   }
 
   def postTrade(id:Long, tradeId:Long) = Action.async {

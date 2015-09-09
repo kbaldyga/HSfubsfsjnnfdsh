@@ -102,3 +102,9 @@ body {
   display: inline-block;
   border-radius: 50%;
 }
+
+/* contractor form */
+div.centered500 {
+  max-width: 500px;
+  margin: auto;
+}

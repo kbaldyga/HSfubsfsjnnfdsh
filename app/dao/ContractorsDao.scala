@@ -89,6 +89,6 @@ class ContractorsDao @Inject()(protected val dbConfigProvider: DatabaseConfigPro
 
     def trades = contractorTrades.filter(_.contractorId === id).flatMap(_.tradeFk)
 
-    override def * = (id.?, name, email, phone, website, postcode, description) <> ((Contractor.apply _).tupled, Contractor.unapply)
+    override def * = (id.?, name, email, phone, website, postcode, description.?) <> ((Contractor.apply _).tupled, Contractor.unapply)
   }
 }
