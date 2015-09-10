@@ -1,6 +1,7 @@
 package authentication
 
 import controllers.routes
+import dao.Accounts
 import models.Role.{NormalUser, Administrator}
 import models.{Role, Account}
 import play.api.mvc.RequestHeader
@@ -10,7 +11,7 @@ import scala.concurrent.{Future, ExecutionContext}
 import jp.t2v.lab.play2.auth.{TransparentIdContainer, AsyncIdContainer, AuthConfig}
 import scala.reflect.{ClassTag, classTag}
 
-trait AuthConfigImpl  extends AuthConfig {
+trait AuthConfigImpl extends AuthConfig {
 
   type Id = Int // TODO: change to username/email?
   type User = Account
@@ -37,7 +38,7 @@ trait AuthConfigImpl  extends AuthConfig {
 
   // TODO: match changed Id type
   def resolveUser(id: Id)(implicit ctx: ExecutionContext) =
-    Future.successful(Account.findById(id))
+    Accounts.findById(id)
   def authorizationFailed(request: RequestHeader)(implicit ctx: ExecutionContext) = throw new AssertionError("don't use")
   override def authorizationFailed(request: RequestHeader, user: User, authority: Option[Authority])(implicit ctx: ExecutionContext) = {
     Future.successful(Forbidden("no permission"))

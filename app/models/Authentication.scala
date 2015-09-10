@@ -1,31 +1,29 @@
 package models
 
-import models.Role.NormalUser
 import play.api.libs.json.Json
-
 
 case class Login(username: String, password: String)
 object Login {
   implicit val loginFormat = Json.format[Login]
 }
 
-case class Account(id: Int, email: String, password: String, name: String, role: Role)
+case class Account(id: Option[Int], email: String, password: String, role: Role)
 
 // TODO: Implement dao
 // TODO: Implement BCrypt
-object Account {
-
-  def authenticate(email: String, password: String): Option[Account] =  ???
-
-  def findByEmail(email: String): Option[Account] = ???
-
-  def findById(id: Int): Option[Account] = Some(Account(100, "username", "password", "name", NormalUser))
-
-  def findAll(): Seq[Account] = ???
-
-  def create(account: Account) = ???
-
-}
+//object Account {
+//
+//  def authenticate(email: String, password: String): Option[Account] =  ???
+//
+//  def findByEmail(email: String): Option[Account] = ???
+//
+//  def findById(id: Int): Option[Account] = Some(Account(100, "username", "password", NormalUser))
+//
+//  def findAll(): Seq[Account] = ???
+//
+//  def create(account: Account) = ???
+//
+//}
 
 //
 //object Account extends SQLSyntaxSupport[Account] {

@@ -2,7 +2,9 @@ package controllers
 
 import javax.inject.Inject
 import authentication.AuthConfigImpl
+import dao.Accounts
 import jp.t2v.lab.play2.auth.{AuthElement, LoginLogout}
+import models.Account
 import models.Role.NormalUser
 import play.api.mvc.Action
 import play.api.mvc.Controller
@@ -22,6 +24,7 @@ class User extends Controller with LoginLogout with AuthConfigImpl {
   def authenticate = Action.async(parse.json) { implicit request =>
     val loginResult = request.body.validate[models.Login]
     // TODO: get user by username from loginResult
+    Accounts.create(new Account(None, "email", "password", NormalUser))
     gotoLoginSucceeded(100)
   }
 
