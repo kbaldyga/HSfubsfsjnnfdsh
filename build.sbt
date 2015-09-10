@@ -13,7 +13,9 @@ libraryDependencies ++= Seq(
   "com.typesafe.play" %% "play-slick" % "1.0.1",
   //"com.h2database" % "h2" % "1.4.187",
   "com.typesafe.play" %% "play-slick-evolutions" % "1.0.1",
-  "org.postgresql" % "postgresql" % "9.4-1202-jdbc42"
+  "org.postgresql" % "postgresql" % "9.4-1202-jdbc42",
+  "jp.t2v" %% "play2-auth" % "0.14.1",
+  "jp.t2v" %% "play2-auth-test" % "0.14.1" % "test"
 )
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
