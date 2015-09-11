@@ -29,3 +29,4 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 
 POST     /api/login                         controllers.User.authenticate
 GET     /api/secured                        controllers.Test.main
+POST    /api/newuser                        controllers.User.createUser

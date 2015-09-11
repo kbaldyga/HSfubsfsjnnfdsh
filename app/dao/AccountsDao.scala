@@ -1,6 +1,7 @@
 package dao
 
 import models.{Role, Account}
+import org.mindrot.jbcrypt.BCrypt
 import play.api.Play
 import play.api.db.slick.{HasDatabaseConfig, DatabaseConfigProvider}
 import slick.backend.DatabaseConfig
@@ -9,19 +10,24 @@ import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
 
-object Accounts extends AccountsDaoTrait with HasDatabaseConfig[JdbcProfile]{
+object Accounts extends AccountsDao with HasDatabaseConfig[JdbcProfile]{
   override protected val dbConfig: DatabaseConfig[JdbcProfile] =
     DatabaseConfigProvider.get[JdbcProfile](Play.current)
 }
 
-trait AccountsDaoTrait { self: HasDatabaseConfig[JdbcProfile] =>
+trait AccountsDao { self: HasDatabaseConfig[JdbcProfile] =>
   protected val driver: JdbcProfile
   import driver.api._
 
   val accounts = TableQuery[Accounts]
 
-  def authenticate(email: String, password: String): Future[Option[Account]] =
-    db.run(accounts.filter(_.email === email).filter(_.password === password).result.headOption)
+  def authenticate(email: String, password: String): Future[Option[Account]] = {
+    val account = findByEmail(email)
+    account.flatMap {
+      case None => account
+      case Some(user) => if(BCrypt.checkpw(password, user.password)) account else Future.successful(None)
+    }
+  }
 
   def findByEmail(email: String): Future[Option[Account]] = db.run(accounts.filter(_.email === email).result.headOption)
 
@@ -30,15 +36,16 @@ trait AccountsDaoTrait { self: HasDatabaseConfig[JdbcProfile] =>
 
   def findAll(): Future[Seq[Account]] = db.run(accounts.result)
 
-  def create(account: Account) = {
-    val insertion = (accounts returning accounts.map(_.id)) += account
+  def create(account: Account):Future[Account] = {
+    val pass = BCrypt.hashpw(account.password, BCrypt.gensalt())
+    val insertion = (accounts returning accounts.map(_.id)) += Account(None, account.email, pass, account.role )
     val inserted = db.run(insertion)
     inserted.map { resultId =>
       account.copy(id = Some(resultId))
     }
   }
 
-  class Accounts(tag:Tag) extends Table[Account](tag, "Accounts") {
+  protected class Accounts(tag:Tag) extends Table[Account](tag, "Accounts") {
     def id = column[Int]("Id", O.PrimaryKey, O.AutoInc)
     def email = column[String]("Email")
     def password = column[String]("Password")
