@@ -25,3 +25,10 @@ GET     /api/postcodes/:id/nearest/:dis     controllers.Postcode.nearest(id:Int,
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+
+
+# Test user authentication/authorization
+POST     /api/login                         controllers.User.authenticate
+POST    /api/logout                         controllers.User.logout
+GET     /api/secured                        controllers.Test.main
+POST    /api/newuser                        controllers.User.createUser
