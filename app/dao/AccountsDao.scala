@@ -9,7 +9,6 @@ import slick.driver.JdbcProfile
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-// TODO: Create SQL
 object Accounts extends AccountsDao with HasDatabaseConfig[JdbcProfile]{
   override protected val dbConfig: DatabaseConfig[JdbcProfile] =
     DatabaseConfigProvider.get[JdbcProfile](Play.current)
