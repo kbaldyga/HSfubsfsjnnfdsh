@@ -1,6 +1,5 @@
 package controllers
 
-import authentication.AuthConfigImpl
 import dao.Accounts
 import jp.t2v.lab.play2.auth.{AuthElement, LoginLogout}
 import models.Account
@@ -19,7 +18,7 @@ class User extends Controller with LoginLogout with AuthConfigImpl {
   }
 
   def logout = Action.async { implicit request =>
-    gotoLogoutSucceeded
+    gotoLogoutSucceeded // this sets cookie to ""
   }
 
   def authenticate = Action.async(parse.json) { implicit request =>

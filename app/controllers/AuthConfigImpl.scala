@@ -1,17 +1,17 @@
-package authentication
+package controllers
 
 import dao.Accounts
-import models.Role.{NormalUser, Administrator}
-import models.{Role, Account}
+import jp.t2v.lab.play2.auth.{AsyncIdContainer, AuthConfig, TransparentIdContainer}
+import models.Role.{Administrator, NormalUser}
+import models.{Account, Role}
 import play.api.mvc.RequestHeader
 import play.api.mvc.Results._
+import play.api.libs.json.Json.toJson
 
-import scala.concurrent.{Future, ExecutionContext}
-import jp.t2v.lab.play2.auth.{TransparentIdContainer, AsyncIdContainer, AuthConfig}
+import scala.concurrent.{ExecutionContext, Future}
 import scala.reflect.{ClassTag, classTag}
 
 trait AuthConfigImpl extends AuthConfig {
-
   type Id = Int
   type User = Account
   type Authority = Role
@@ -19,9 +19,9 @@ trait AuthConfigImpl extends AuthConfig {
   val idTag: ClassTag[Id] = classTag[Id]
   val sessionTimeoutInSeconds = 3600
 
-  def loginSucceeded(request: RequestHeader)(implicit ctx: ExecutionContext) = throw new AssertionError("don't use")
-  def logoutSucceeded(request: RequestHeader)(implicit ctx: ExecutionContext) = throw new AssertionError("don't use")
-  def authenticationFailed(request: RequestHeader)(implicit ctx: ExecutionContext) = throw new AssertionError("don't use")
+  def loginSucceeded(request: RequestHeader)(implicit ctx: ExecutionContext) = Future.successful(Ok(toJson("OK")))
+  def logoutSucceeded(request: RequestHeader)(implicit ctx: ExecutionContext) = Future.successful(Ok(toJson("OK")))
+  def authenticationFailed(request: RequestHeader)(implicit ctx: ExecutionContext) = Future.successful(Forbidden("no permission"))
 
   def resolveUser(id: Id)(implicit ctx: ExecutionContext) = Accounts.findById(id)
   def authorizationFailed(request: RequestHeader)(implicit ctx: ExecutionContext) = throw new AssertionError("don't use")
