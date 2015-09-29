@@ -1,6 +1,7 @@
 package controllers
 
-import dao.Accounts
+import javax.inject.{Inject, Singleton}
+import dao.AccountsDao
 import jp.t2v.lab.play2.auth.{AuthElement, LoginLogout}
 import models.Account
 import models.Role.NormalUser
@@ -11,7 +12,10 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import scala.concurrent.Future
 
-class User extends Controller with LoginLogout with AuthConfigImpl {
+class User @Inject()(accountsDao: AccountsDao) extends Controller with LoginLogout
+  with AuthConfigImpl {
+
+  override var accounts: AccountsDao = accountsDao
 
   def login = Action { implicit request =>
     Ok(views.html.index("test"))
@@ -25,7 +29,7 @@ class User extends Controller with LoginLogout with AuthConfigImpl {
     val loginResult = request.body.validate[models.Login]
     loginResult.fold(error => Future.successful(BadRequest(toJson("bad request"))),
     login =>
-      Accounts.authenticate(login.username, login.password) flatMap {
+      accountsDao.authenticate(login.username, login.password) flatMap {
         case None => Future.successful(Forbidden(toJson("bad username/password")))
         case Some(u) => gotoLoginSucceeded(u.id.get)
       }
@@ -36,17 +40,20 @@ class User extends Controller with LoginLogout with AuthConfigImpl {
     val loginResult = request.body.validate[models.Login]
     loginResult.fold(error => Future.successful(BadRequest(toJson("bad request"))),
       login =>
-        Accounts.create(new Account(None, login.username, login.password, NormalUser)) flatMap {
+        accountsDao.create(new Account(None, login.username, login.password, NormalUser)) flatMap {
           u => gotoLoginSucceeded(u.id.get)
         }
     )
   }
+
 }
 
 
-class Test extends Controller with AuthElement with AuthConfigImpl {
+class Test @Inject()(accountsDao: AccountsDao) extends Controller with AuthElement with AuthConfigImpl {
   def main = StackAction(AuthorityKey -> NormalUser) { request =>
     val title = "normal user"
     Ok(toJson(title))
   }
+
+  override var accounts: AccountsDao = accountsDao
 }

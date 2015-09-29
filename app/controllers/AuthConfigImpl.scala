@@ -1,6 +1,6 @@
 package controllers
 
-import dao.Accounts
+import dao.AccountsDao
 import jp.t2v.lab.play2.auth.{AsyncIdContainer, AuthConfig, TransparentIdContainer}
 import models.Role.{Administrator, NormalUser}
 import models.{Account, Role}
@@ -12,6 +12,8 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.reflect.{ClassTag, classTag}
 
 trait AuthConfigImpl extends AuthConfig {
+  var accounts: AccountsDao
+
   type Id = Int
   type User = Account
   type Authority = Role
@@ -23,7 +25,8 @@ trait AuthConfigImpl extends AuthConfig {
   def logoutSucceeded(request: RequestHeader)(implicit ctx: ExecutionContext) = Future.successful(Ok(toJson("OK")))
   def authenticationFailed(request: RequestHeader)(implicit ctx: ExecutionContext) = Future.successful(Forbidden("no permission"))
 
-  def resolveUser(id: Id)(implicit ctx: ExecutionContext) = Accounts.findById(id)
+  def resolveUser(id: Id)(implicit ctx: ExecutionContext) =
+    accounts.findById(id)
   def authorizationFailed(request: RequestHeader)(implicit ctx: ExecutionContext) = throw new AssertionError("don't use")
   override def authorizationFailed(request: RequestHeader, user: User, authority: Option[Authority])
                                   (implicit ctx: ExecutionContext) = {

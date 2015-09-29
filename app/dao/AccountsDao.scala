@@ -1,20 +1,19 @@
 package dao
 
+import javax.inject.{Inject, Singleton}
 import models.{Role, Account}
 import org.mindrot.jbcrypt.BCrypt
-import play.api.Play
-import play.api.db.slick.{HasDatabaseConfig, DatabaseConfigProvider}
-import slick.backend.DatabaseConfig
+import play.api.db.slick.{HasDatabaseConfigProvider, HasDatabaseConfig, DatabaseConfigProvider}
 import slick.driver.JdbcProfile
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-object Accounts extends AccountsDao with HasDatabaseConfig[JdbcProfile]{
-  override protected val dbConfig: DatabaseConfig[JdbcProfile] =
-    DatabaseConfigProvider.get[JdbcProfile](Play.current)
+@Singleton()
+class AccountsDao @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
+  extends AccountsBase with HasDatabaseConfigProvider[JdbcProfile]{
 }
 
-trait AccountsDao { self: HasDatabaseConfig[JdbcProfile] =>
+trait AccountsBase { self: HasDatabaseConfig[JdbcProfile] =>
   protected val driver: JdbcProfile
   import driver.api._
 
