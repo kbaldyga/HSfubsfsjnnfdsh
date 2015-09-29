@@ -24,18 +24,6 @@ class ContractorsDao @Inject()(protected val dbConfigProvider: DatabaseConfigPro
     trade <- contractor.trades
   } yield(contractor, trade)
 
-//  def all():Future[Seq[models.Contractor]] = db.run(contractorTradesQuery
-//    .result
-//    .map {
-//      _.groupBy(_._1)
-//    .map {
-//        case (k, v) => {
-//          k.Trades = v.map(_._2)
-//          k
-//        }
-//      }.toSeq
-//  })
-
   def all():Future[Seq[Contractor]] = db.run(contractors.result)
 
   def tradesByContractor(id:Long):Future[Seq[Trade]] = {
@@ -77,8 +65,10 @@ class ContractorsDao @Inject()(protected val dbConfigProvider: DatabaseConfigPro
     db.run(contractor.update(description))
   }
 
-//  def getEverything(id:Long):Option[Contractor] =
-//    Await.result(all(), Duration.Inf).filter(_.id == id).headOption
+  def updateLongDescription(id:Long, description:String): Future[Int] = {
+    val contractor = for {c <- contractors if c.id === id} yield c.longDescription
+    db.run(contractor.update(description))
+  }
 
   case class ContractorTrade(contractorId:Long, tradeId:Long)
 
@@ -101,9 +91,11 @@ class ContractorsDao @Inject()(protected val dbConfigProvider: DatabaseConfigPro
     def postcode = column[Int]("Postcode")
     def postcodeSuffix = column[String]("PostcodeSuffix")
     def description = column[String]("Description")
+    def longDescription = column[String]("LongDescription")
 
     def trades = contractorTrades.filter(_.contractorId === id).flatMap(_.tradeFk)
 
-    override def * = (id.?, name, email, phone, website, postcode, postcodeSuffix, description.?) <> ((Contractor.apply _).tupled, Contractor.unapply)
+    override def * = (id.?, name, email, phone, website, postcode, postcodeSuffix, description.?, longDescription.?) <>
+      ((Contractor.apply _).tupled, Contractor.unapply)
   }
 }

@@ -58,6 +58,11 @@ class Contractor @Inject()(contractorsDao: ContractorsDao, postcodesDao: Postcod
             case JsString(s) =>
               contractorsDao.updateDescription(id, s.toString)
           }
+        fields.getOrElse("longDescription", None) match {
+          case None => { }
+          case JsString(s) =>
+            contractorsDao.updateLongDescription(id, s.toString)
+        }
         Future.successful(Ok(toJson("Ok")))
       case _ => Future.successful(BadRequest(toJson("bad request")))
     }

@@ -6,7 +6,8 @@ create table "Contractors" ("Id" serial NOT NULL PRIMARY KEY
                             ,"Website" text NULL
                             ,"Postcode" integer NOT NULL
                             ,"PostcodeSuffix" varchar(2) NOT NULL
-                            ,"Description" text NULL);
+                            ,"Description" text NULL
+                            ,"LongDescription" text NULL);
 
 create table "ContractorTrades" ("ContractorId" INTEGER NOT NULL,
                                  "TradeId" INTEGER NOT NULL);
