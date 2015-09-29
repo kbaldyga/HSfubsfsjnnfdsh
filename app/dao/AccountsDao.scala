@@ -19,13 +19,16 @@ trait AccountsBase { self: HasDatabaseConfig[JdbcProfile] =>
 
   val accounts = TableQuery[Accounts]
 
-  def authenticate(email: String, password: String): Future[Option[Account]] = {
-    val account = findByEmail(email)
+  def authenticate(token: String, password: String): Future[Option[Account]] = {
+    val account = findByToken(token)
     account.flatMap {
       case None => account
       case Some(user) => if(BCrypt.checkpw(password, user.password)) account else Future.successful(None)
     }
   }
+
+  def findByToken(token: String): Future[Option[Account]] =
+    db.run(accounts.filter(a => (a.email === token) || (a.email === token)).result.headOption)
 
   def findByEmail(email: String): Future[Option[Account]] = db.run(accounts.filter(_.email === email).result.headOption)
 
@@ -36,7 +39,8 @@ trait AccountsBase { self: HasDatabaseConfig[JdbcProfile] =>
 
   def create(account: Account):Future[Account] = {
     val pass = BCrypt.hashpw(account.password, BCrypt.gensalt())
-    val insertion = (accounts returning accounts.map(_.id)) += Account(None, account.email, pass, account.role )
+    val insertion = (accounts returning accounts.map(_.id)) +=
+      Account(None, account.login, account.email, pass, account.displayName, account.registeredFromIp, account.role )
     val inserted = db.run(insertion)
     inserted.map { resultId =>
       account.copy(id = Some(resultId))
@@ -45,12 +49,16 @@ trait AccountsBase { self: HasDatabaseConfig[JdbcProfile] =>
 
   protected class Accounts(tag:Tag) extends Table[Account](tag, "Accounts") {
     def id = column[Int]("Id", O.PrimaryKey, O.AutoInc)
+    def login = column[String]("Login")
     def email = column[String]("Email")
     def password = column[String]("Password")
+    def displayName = column[String]("DisplayName")
+    def registeredFromIp = column[String]("RegisteredFromIp")
     def role = column[Role]("Role")
 
     implicit val roleTypeMapper = MappedColumnType.base[Role, String](_.toString(), Role.valueOf(_))
 
-    override def * = (id.?, email, password, role) <> ((Account.apply _).tupled, Account.unapply)
+    override def * = (id.?, login, email, password, displayName, registeredFromIp, role) <>
+      ((Account.apply _).tupled, Account.unapply)
   }
 }
