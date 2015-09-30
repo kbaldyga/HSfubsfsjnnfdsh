@@ -9,10 +9,9 @@ import play.api.db.slick.HasDatabaseConfigProvider
 import slick.driver.JdbcProfile
 import scala.concurrent.ExecutionContext.Implicits.global
 
-// class ReviewsDao extends HasDatabaseConfigProvider[JdbcProfile] { ... + inner Reviews class }
 @Singleton()
-class ReviewsDao @Inject()(protected val dbConfigProvider:DatabaseConfigProvider) extends ReviewComponent
-  with HasDatabaseConfigProvider[JdbcProfile] {
+class ReviewsDao @Inject()(protected val dbConfigProvider:DatabaseConfigProvider)
+  extends HasDatabaseConfigProvider[JdbcProfile] {
   import driver.api._
 
   val reviews = TableQuery[Reviews]
@@ -30,10 +29,7 @@ class ReviewsDao @Inject()(protected val dbConfigProvider:DatabaseConfigProvider
 
   def getByUser(userId: Long): Future[Seq[Review]] =
     db.run(reviews.filter(_.createdBy === userId).result)
-}
 
-trait ReviewComponent { self: HasDatabaseConfigProvider[JdbcProfile] =>
-  import driver.api._
 
   protected class Reviews(tag: Tag) extends Table[Review](tag, "Reviews") {
     def id = column[Long]("Id", O.PrimaryKey, O.AutoInc)
@@ -44,6 +40,6 @@ trait ReviewComponent { self: HasDatabaseConfigProvider[JdbcProfile] =>
     def longDescription = column[String]("LongDescription")
 
     override def * = (id.?, contractorId, createdBy, rating, shortDescription, longDescription.?) <>
-        ((Review.apply _).tupled, Review.unapply)
+      ((Review.apply _).tupled, Review.unapply)
   }
 }

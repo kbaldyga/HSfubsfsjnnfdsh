@@ -37,5 +37,5 @@ POST    /api/logout                         controllers.User.logout
 GET     /api/secured                        controllers.Test.main
 POST    /api/newuser                        controllers.User.createUser
 
-// get my reviews
-// get reviews by user
+# get my reviews
+# get reviews by user
