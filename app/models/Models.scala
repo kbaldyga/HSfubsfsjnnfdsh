@@ -8,6 +8,7 @@ object Trade { implicit val tradeFormat = Json.format[Trade] }
 
 // CONTRACTOR
 case class Contractor(id: Option[Long],
+                      accountId: Long,
                       name: String,
                       email: String,
                       phone: String,
@@ -30,3 +31,10 @@ object PostReview { implicit val format = Json.format[PostReview] }
 case class Review(id: Option[Long], contractorId: Long, createdBy: Long, rating: Int,
                   shortDescription: String, longDescription: Option[String])
 object Review { implicit val format = Json.format[Review] }
+
+// PORTFOLIO
+case class Portfolio(id: Option[Long], contractorId: Long, tradeId: Long,
+                     shortDescription: String, longDescription: String)
+object Portfolio { implicit val format = Json.format[Portfolio] }
+case class PostPortfolio(tradeId: Long, shortDescription: String, longDescription: String)
+object PostPortfolio { implicit val format = Json.format[PostPortfolio] }

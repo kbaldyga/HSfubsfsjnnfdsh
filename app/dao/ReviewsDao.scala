@@ -30,7 +30,6 @@ class ReviewsDao @Inject()(protected val dbConfigProvider:DatabaseConfigProvider
   def getByUser(userId: Long): Future[Seq[Review]] =
     db.run(reviews.filter(_.createdBy === userId).result)
 
-
   protected class Reviews(tag: Tag) extends Table[Review](tag, "Reviews") {
     def id = column[Long]("Id", O.PrimaryKey, O.AutoInc)
     def contractorId = column[Long]("ContractorId")

@@ -1,5 +1,6 @@
 # --- !Ups
 create table "Contractors" ("Id" serial NOT NULL PRIMARY KEY
+                            ,"AccountId" INT NOT NULL
                             ,"Name" text NOT NULL
                             ,"Email" text NOT NULL
                             ,"Phone" text NOT NULL

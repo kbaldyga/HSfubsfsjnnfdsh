@@ -18,7 +18,6 @@ class Review @Inject()(reviewsDao: ReviewsDao, contractorsDao: ContractorsDao, a
 
   def index(contractorId: Long) = Action.async {
     reviewsDao.getByContractor(contractorId).map {
-      case Seq() => NotFound
       case reviews => Ok(toJson(reviews))
     }
   }
@@ -51,7 +50,4 @@ class Review @Inject()(reviewsDao: ReviewsDao, contractorsDao: ContractorsDao, a
       case r => Ok(toJson(r))
     }
   }
-
-
-
 }
