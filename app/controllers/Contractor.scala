@@ -53,11 +53,11 @@ class Contractor @Inject()(contractorsDao: ContractorsDao, postcodesDao: Postcod
   def details(id:Long) = Action.async(parse.json) { request =>
     request.body match {
       case JsObject(fields) =>
-          fields.getOrElse("description", None) match {
-            case None => { }
-            case JsString(s) =>
-              contractorsDao.updateDescription(id, s.toString)
-          }
+        fields.getOrElse("description", None) match {
+          case None => { }
+          case JsString(s) =>
+            contractorsDao.updateDescription(id, s.toString)
+        }
         fields.getOrElse("longDescription", None) match {
           case None => { }
           case JsString(s) =>

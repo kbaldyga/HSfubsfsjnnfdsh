@@ -19,9 +19,13 @@ POST    /api/contractors                    controllers.Contractor.post
 PUT     /api/contractors/:id/trades         controllers.Contractor.putTrades(id:Long)
 PUT     /api/contractors/:id                controllers.Contractor.details(id:Long)
 
+GET     /api/contractors/:id/reviews        controllers.Review.index(id:Long)
+POST    /api/contractors/:id/reviews        controllers.Review.post(id:Long)
+
 GET     /api/postcodes                      controllers.Postcode.index(prefix: Option[String])
 GET     /api/postcodes/:id                  controllers.Postcode.get(id:Int)
 GET     /api/postcodes/:id/nearest/:dis     controllers.Postcode.nearest(id:Int, dis:Int)
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
@@ -32,3 +36,6 @@ POST     /api/login                         controllers.User.authenticate
 POST    /api/logout                         controllers.User.logout
 GET     /api/secured                        controllers.Test.main
 POST    /api/newuser                        controllers.User.createUser
+
+// get my reviews
+// get reviews by user

@@ -6,11 +6,11 @@ import models.{Trade, Contractor}
 import play.api.db.slick.{HasDatabaseConfigProvider, DatabaseConfigProvider}
 import slick.driver.JdbcProfile
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{Await, Future}
-import scala.concurrent.duration.Duration
+import scala.concurrent.Future
 
 @Singleton()
-class ContractorsDao @Inject()(protected val dbConfigProvider: DatabaseConfigProvider, protected val tradesDao: TradesDao) extends TradeComponent
+class ContractorsDao @Inject()(protected val dbConfigProvider: DatabaseConfigProvider, protected val tradesDao: TradesDao)
+  extends TradeComponent
   with HasDatabaseConfigProvider[JdbcProfile] {
 
   import driver.api._

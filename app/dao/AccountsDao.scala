@@ -28,7 +28,7 @@ trait AccountsBase { self: HasDatabaseConfig[JdbcProfile] =>
   }
 
   def findByToken(token: String): Future[Option[Account]] =
-    db.run(accounts.filter(a => (a.email === token) || (a.email === token)).result.headOption)
+    db.run(accounts.filter(a => (a.login === token) || (a.email === token)).result.headOption)
 
   def findByEmail(email: String): Future[Option[Account]] = db.run(accounts.filter(_.email === email).result.headOption)
 
