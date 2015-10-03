@@ -29,3 +29,6 @@ routesGenerator := InjectedRoutesGenerator
 //fork in run := true
 // set to false to debug!
 fork in run := false
+
+
+fork in run := true

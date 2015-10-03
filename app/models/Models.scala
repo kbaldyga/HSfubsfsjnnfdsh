@@ -1,5 +1,6 @@
 package models
 
+import org.joda.time.DateTime
 import play.api.libs.json.Json
 
 // TRADE
@@ -38,3 +39,12 @@ case class Portfolio(id: Option[Long], contractorId: Long, tradeId: Long,
 object Portfolio { implicit val format = Json.format[Portfolio] }
 case class PostPortfolio(tradeId: Long, shortDescription: String, longDescription: String)
 object PostPortfolio { implicit val format = Json.format[PostPortfolio] }
+
+// UPLOAD
+case class Upload(id: Option[Long], aggregateId: Long, createdBy: Long,
+                   uploadType: String, physicalLocation: String, createdAt: Option[DateTime])
+object Upload { implicit val format = Json.format[Upload] }
+
+//    case "Portfolio" => PortfolioType
+//    case "Review"    => ReviewType
+//    case "Avatar"   => AvatarTypeArgumentException()
